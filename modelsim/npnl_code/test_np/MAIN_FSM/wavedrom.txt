@@ -1,0 +1,20 @@
+#
+
+{signal: [
+  {name: 'sclk', 	wave: 'p............................................'},
+  {name: 'ST', 		wave: 'x22.2.....22.2x|=.x', data: ['IDLE', 'CS', 'DATA', 'CS', 'finish'], period: 3},
+  {name: 'CS_N', 	wave: '1..0........1...', data: ['IDLE', 'CS', 'DATA', 'CS'], period: 3},
+  {name: 'sck', 	wave: 'p...............',period: 3},
+  
+  {name: 'EN_SCK_B', 	wave: '1...0....1...................', data: ['IDLE', 'CS', 'DATA', 'CS'], period: 3},
+  
+  {name: 'SPI_SCK', wave: 'h...n....h.',period: 3,phase: -1.5},
+  
+  {name: 'cnt_spi', wave: '0....2222222.......................', data: ['1', '2', '3', '4','30', '31'], period: 3},
+  {name: 'mosi', 	wave: 'X..22222222.......................', data: ['A', 'B', 'C', 'D','E', 'F'], period: 3},
+  {name: 'MISO', 	wave: '2....2222222.......................', data: ['a', 'b', 'c', 'd','e', 'f'], period: 3,phase: -0.5 },
+  
+  {},
+  {name: 'ack', wave: '1.....|01.'}
+]}
+
