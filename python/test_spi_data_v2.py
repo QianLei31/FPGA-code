@@ -1,6 +1,3 @@
-
-
-
 import socket
 import binascii
 import matplotlib.pyplot as plt
@@ -73,15 +70,16 @@ def read_mode():
                 data_rec[cnt_read_mem*SIZE_TCPIP_SEND_BUF_TRUNK//4:(cnt_read_mem+1)*SIZE_TCPIP_SEND_BUF_TRUNK//4]=data_list
                 cnt_read_mem = cnt_read_mem + 1
                 # 绘制图形
-            fs=40000
+            fs=20000
             cnt=cnt+1
             time_sample=list([a/fs for a in range(NUM_DATA_POINTS_READ)])
-            
-            ax.plot(data_rec,c='r')
+            len1=len(data_rec[1:])
+            '''time_sample[0:len1],'''
+            ax.plot(data_rec[1:],c='r')
             ax.set_xlabel('Points')
             ax.set_ylabel('ADC VALUE (V)')
-            plt.pause(0.001)
-            ax.cla() 
+            plt.show()
+ 
             
                 
 
@@ -101,6 +99,7 @@ def spi_mode():
         # 连接服务
         s.connect((HOST, PORT))
         spi_cmd = entry_spi_cmd.get()  # 获取文本框中的SPI 命令
+        spi_cmd=spi_cmd.replace("_","")
         spi_cmd = spi_cmd.zfill(32)
         binary_data = bytearray(int(spi_cmd[i:i+8], 2) for i in range(0, len(spi_cmd), 8))
         hex_data = binascii.hexlify(binary_data).decode()
@@ -117,17 +116,15 @@ def spi_mode():
             show_data=data[i:i+4]
             bina_data = []
             hex_data = binascii.hexlify(show_data).decode()
-            hex_data_pr=bin(int(hex_data, 16)).zfill(32)
-            bina_data[0:8]=hex_data_pr[26:34]
-            bina_data[8:16]=hex_data_pr[18:26]
-            bina_data[16:24]=hex_data_pr[10:18]
-            bina_data[24:32]=hex_data_pr[2:10]
-            bina_data = ''.join(bina_data)
-            ADC_data=bina_data[20:32]
-            if bina_data[0:6]=='010011':
-                console_output.insert(tk.END, f"Received:  Code: {bina_data[0:6]} , Adder: {bina_data[6:16]} , Data: {bina_data[16:32]} , Value: {int(ADC_data,2)/4095*1.8} hex: {hex_data} , idx: {i}\n")
+            hex_data="".join(reversed([hex_data[i:i+2] for i in range(0, len(hex_data), 2)]))
+            hex_data_pr=bin(int(hex_data, 16))[2:].zfill(32)
+            #console_output.insert(tk.END, f"{hex_data}\n")
+            #console_output.insert(tk.END, f"{hex_data_pr}\n")
+            ADC_data=hex_data_pr[20:32]
+            if hex_data_pr[0:6]=='010011':
+                console_output.insert(tk.END, f"Received:  Code: {hex_data_pr[0:6]} , Adder: {hex_data_pr[6:16]} , Data: {hex_data_pr[16:32]} , Value: {int(ADC_data,2)/4095*1.8} hex: {hex_data} , idx: {i}\n")
             else:
-                console_output.insert(tk.END, f"Received:  Code: {bina_data[0:6]} , Adder: {bina_data[6:16]} , Data: {bina_data[16:32]} , hex: {hex_data} , idx: {i}\n")
+                console_output.insert(tk.END, f"Received:  Code: {hex_data_pr[0:6]} , Adder: {hex_data_pr[6:16]} , Data: {hex_data_pr[16:32]} , hex: {hex_data} , idx: {i}\n")
     except Exception as e:
         console_output.insert(tk.END, f"Connect Error: {e}\n")
 
