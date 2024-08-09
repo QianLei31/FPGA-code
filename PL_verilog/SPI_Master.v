@@ -49,7 +49,7 @@ module SPI_Master(
 //==============================================================
 // Generate SPI Clock  sck ，分频比为 RATIO_SCK
 //==============================================================
-    always @ (posedge CLK or negedge RST_N)begin 
+    always @ (negedge CLK or negedge RST_N)begin 
         if(!RST_N) begin
             sck   <=  1'b0;
             cnt_sck_to_sclk <= 0;
